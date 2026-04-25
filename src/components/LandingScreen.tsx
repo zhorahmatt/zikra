@@ -148,6 +148,17 @@ export default function LandingScreen() {
               </div>
             </Link>
           </div>
+
+          {/* Credits link */}
+          <div className="mt-4 text-center">
+            <Link
+              href="/credits"
+              className="text-xs transition-opacity hover:opacity-80"
+              style={{ color: "#73796f", fontFamily: "Manrope" }}
+            >
+              Tentang & Kredit
+            </Link>
+          </div>
         </div>
       </div>
     </div>
