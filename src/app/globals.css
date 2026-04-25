@@ -122,7 +122,7 @@ body {
 /* Arabic text optimization */
 .arabic-text {
   font-family: 'Newsreader', Georgia, serif;
-  font-size: 2.5rem;
+  font-size: 1.75rem;
   line-height: 1.8;
   direction: rtl;
   text-align: right;
