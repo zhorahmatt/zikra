@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import type { DzikrItem } from "@/lib/dzikr";
 import { getRepeatCount } from "@/lib/dzikr";
 import { celebrateSingle, celebrateTasbih } from "@/lib/celebrate";
+import { playSingleDone, playTasbihDone } from "@/lib/sound";
 
 interface DzikrCardProps {
   item: DzikrItem;
@@ -32,6 +33,7 @@ export default function DzikrCard({
   const handleSelesai = () => {
     if (done) return;
     setDone(true);
+    playSingleDone();
     celebrateSingle(btnRef.current);
     navigator.vibrate?.(10);
     onComplete?.();
@@ -45,6 +47,7 @@ export default function DzikrCard({
     navigator.vibrate?.(10);
     if (next >= repeatCount) {
       setDone(true);
+      playTasbihDone();
       celebrateTasbih(btnRef.current);
       onComplete?.();
     }

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import type { DzikrItem } from "@/lib/dzikr";
 import { saveProgress, getProgress } from "@/lib/progress";
 import { celebrateComplete } from "@/lib/celebrate";
+import { playCompleteDone } from "@/lib/sound";
 import DzikrCard from "@/components/DzikrCard";
 import ProgressRing from "@/components/ui/ProgressRing";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -73,7 +74,10 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
     }
     // Fire grand finale when all items are done
     if (completedIndices.length === items.length && items.length > 0) {
-      setTimeout(() => celebrateComplete(), 300);
+      setTimeout(() => {
+        celebrateComplete();
+        playCompleteDone();
+      }, 300);
     }
   }, [type, currentIndex, completedIndices, items.length]);
 
