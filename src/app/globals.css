@@ -1,26 +1,226 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ========================================
+   DESIGN SYSTEM: Serene Remembrance
+   ======================================== */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* --- Colors: Light Mode --- */
+  --color-surface: #faf9f6;
+  --color-surface-dim: #dbdad7;
+  --color-surface-bright: #faf9f6;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #f4f3f1;
+  --color-surface-container: #efeeeb;
+  --color-surface-container-high: #e9e8e5;
+  --color-surface-container-highest: #e3e2e0;
+  --color-on-surface: #1a1c1a;
+  --color-on-surface-variant: #434840;
+  --color-inverse-surface: #2f312f;
+  --color-inverse-on-surface: #f2f1ee;
+  --color-outline: #73796f;
+  --color-outline-variant: #c3c8bd;
+  --color-surface-tint: #496640;
+
+  --color-primary: #334f2b;
+  --color-on-primary: #ffffff;
+  --color-primary-container: #4a6741;
+  --color-on-primary-container: #c2e4b4;
+  --color-inverse-primary: #afd0a1;
+
+  --color-secondary: #5f5f55;
+  --color-on-secondary: #ffffff;
+  --color-secondary-container: #e5e3d6;
+  --color-on-secondary-container: #65655b;
+
+  --color-tertiary: #404b39;
+  --color-on-tertiary: #ffffff;
+  --color-tertiary-container: #576350;
+  --color-on-tertiary-container: #d1dfc6;
+
+  --color-error: #ba1a1a;
+  --color-on-error: #ffffff;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+
+  --color-primary-fixed: #caecbc;
+  --color-primary-fixed-dim: #afd0a1;
+
+  /* --- Typography --- */
+  --font-serif: 'Newsreader', Georgia, serif;
+  --font-sans: 'Manrope', system-ui, sans-serif;
+
+  /* --- Spacing --- */
+  --spacing-edge: 1.5rem;
+  --spacing-gutter: 1rem;
+  --spacing-stack-sm: 0.5rem;
+  --spacing-stack-md: 1.5rem;
+  --spacing-stack-lg: 3rem;
+
+  /* --- Border Radius --- */
+  --radius-sm: 0.25rem;
+  --radius-DEFAULT: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ========================================
+   CSS Custom Properties for Dark Mode
+   ======================================== */
+:root {
+  --bg: #faf9f6;
+  --bg-card: #ffffff;
+  --bg-card-alt: #f4f3f1;
+  --text-primary: #1a1c1a;
+  --text-secondary: #434840;
+  --text-muted: #73796f;
+  --border-color: #c3c8bd;
+  --primary-green: #334f2b;
+  --primary-green-light: #4a6741;
+  --primary-green-surface: #caecbc;
+  --shadow-color: rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="dark"] {
+  --bg: #1a1c1a;
+  --bg-card: #2f312f;
+  --bg-card-alt: #262826;
+  --text-primary: #e3e2e0;
+  --text-secondary: #c3c8bd;
+  --text-muted: #8a8f85;
+  --border-color: #434840;
+  --primary-green: #afd0a1;
+  --primary-green-light: #89b07c;
+  --primary-green-surface: #334f2b;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+/* ========================================
+   Base Styles
+   ======================================== */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: 'Manrope', system-ui, sans-serif;
+  overscroll-behavior-y: contain;
+  min-height: 100dvh;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Arabic text optimization */
+.arabic-text {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 2.5rem;
+  line-height: 1.8;
+  direction: rtl;
+  text-align: right;
+  font-weight: 400;
+  color: var(--text-primary);
+}
+
+.translation-text {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.latin-text {
+  font-family: 'Newsreader', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Card elevation */
+.card-elevated {
+  background: var(--bg-card);
+  border-radius: 1rem;
+  box-shadow: 0px 4px 20px var(--shadow-color);
+  border: 1px solid var(--border-color);
+}
+
+.card-flat {
+  background: var(--bg-card-alt);
+  border-radius: 1rem;
+  border: 1px solid var(--border-color);
+}
+
+/* Chip Styles */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-family: 'Manrope', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  line-height: 1.2;
+}
+
+.chip-primary {
+  background-color: var(--primary-green-surface);
+  color: var(--primary-green);
+}
+
+.chip-tertiary {
+  background-color: #d9e7ce;
+  color: #404b39;
+}
+
+[data-theme="dark"] .chip-tertiary {
+  background-color: #3a4534;
+  color: #becbb3;
+}
+
+/* Auto-scroll animation */
+@keyframes pulse-gentle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+
+.pulse-gentle {
+  animation: pulse-gentle 2s ease-in-out infinite;
+}
+
+/* Bottom safe area */
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Scrollbar customization */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 9999px;
+}
+
+/* Container max width */
+.container-app {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
 }
