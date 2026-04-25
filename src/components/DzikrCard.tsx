@@ -59,12 +59,16 @@ export default function DzikrCard({
     ? "Selesai"
     : "Tandai";
 
+  const handleCardTap = isTasbih ? handleTasbihTap : handleSelesai;
+
   return (
     <article
+      onClick={onComplete && !done ? handleCardTap : undefined}
       className={`
         card-elevated p-5 transition-all duration-300
         ${isActive ? "ring-2 ring-primary-container" : ""}
         ${done ? "opacity-75" : ""}
+        ${onComplete && !done ? "cursor-pointer active:scale-[0.99]" : ""}
       `}
       id={`dzikr-${index}`}
     >
@@ -185,7 +189,7 @@ export default function DzikrCard({
 
       {/* Latin toggle */}
       <button
-        onClick={() => setShowLatin(!showLatin)}
+        onClick={(e) => { e.stopPropagation(); setShowLatin(!showLatin); }}
         className="text-xs font-medium mb-3 flex items-center gap-1 transition-colors hover:opacity-80"
         style={{ color: "var(--primary-green)" }}
       >
@@ -215,7 +219,7 @@ export default function DzikrCard({
       {item.fawaid && (
         <div className="mb-3">
           <button
-            onClick={() => setShowFawaid(!showFawaid)}
+            onClick={(e) => { e.stopPropagation(); setShowFawaid(!showFawaid); }}
             className="text-xs font-medium flex items-center gap-1 transition-colors hover:opacity-80"
             style={{ color: "var(--text-muted)" }}
           >
