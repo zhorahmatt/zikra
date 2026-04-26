@@ -24,6 +24,10 @@ const AUTO_SCROLL_SPEEDS = [
 export default function ReadingScreen({ type, items }: ReadingScreenProps) {
   const router = useRouter();
   const [completedIndices, setCompletedIndices] = useState<number[]>([]);
+  // Tracks whether the user actually completed items in THIS session.
+  // Used to gate the celebrate effect so it doesn't re-fire on re-entry
+  // when progress is restored from localStorage.
+  const completedInSessionRef = useRef(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
@@ -72,8 +76,14 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
     if (completedIndices.length > 0 || currentIndex > 0) {
       saveProgress(type, currentIndex, completedIndices);
     }
-    // Fire grand finale when all items are done
-    if (completedIndices.length === items.length && items.length > 0) {
+    // Only fire grand finale if the user actively completed all items in
+    // this session (not when progress is merely restored from localStorage).
+    if (
+      completedIndices.length === items.length &&
+      items.length > 0 &&
+      completedInSessionRef.current
+    ) {
+      completedInSessionRef.current = false; // reset so it won't re-fire
       setTimeout(() => {
         celebrateComplete();
         playCompleteDone();
@@ -167,9 +177,14 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
 
   const handleComplete = useCallback(
     (index: number) => {
-      if (!completedIndices.includes(index)) {
-        setCompletedIndices((prev) => [...prev, index]);
-      }
+      // Use functional updater so the guard runs against the *latest* state,
+      // not a stale closure — prevents duplicate insertion even if called
+      // twice in the same React batch (e.g. from bubbled button + card tap).
+      setCompletedIndices((prev) => {
+        if (prev.includes(index)) return prev;
+        completedInSessionRef.current = true; // user actually completed something
+        return [...prev, index];
+      });
 
       // Auto-scroll to next
       if (index < items.length - 1) {
@@ -181,7 +196,7 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
         }, 400);
       }
     },
-    [completedIndices, items.length]
+    [items.length]
   );
 
   return (

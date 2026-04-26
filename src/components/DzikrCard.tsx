@@ -40,7 +40,8 @@ export default function DzikrCard({
   };
 
   // Tap tasbih counter in header pill
-  const handleTasbihTap = () => {
+  const handleTasbihTap = (e?: React.MouseEvent) => {
+    e?.stopPropagation(); // prevent bubble to article onClick
     if (done) return;
     const next = tasbihCount + 1;
     setTasbihCount(next);
@@ -103,7 +104,11 @@ export default function DzikrCard({
         {onComplete && (
           <button
             ref={btnRef}
-            onClick={isTasbih ? handleTasbihTap : handleSelesai}
+            onClick={(e) => {
+              e.stopPropagation();
+              if (isTasbih) handleTasbihTap(e);
+              else handleSelesai();
+            }}
             disabled={done}
             className={`
               shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold
