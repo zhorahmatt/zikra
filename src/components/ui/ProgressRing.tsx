@@ -5,6 +5,7 @@ interface ProgressRingProps {
   total: number;
   size?: number;
   strokeWidth?: number;
+  onClick?: () => void;
 }
 
 export default function ProgressRing({
@@ -12,14 +13,15 @@ export default function ProgressRing({
   total,
   size = 48,
   strokeWidth = 3,
+  onClick,
 }: ProgressRingProps) {
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
   const progress = total > 0 ? current / total : 0;
   const offset = circumference * (1 - progress);
 
-  return (
-    <div className="relative inline-flex items-center justify-center">
+  const inner = (
+    <>
       <svg
         width={size}
         height={size}
@@ -56,6 +58,25 @@ export default function ProgressRing({
       >
         {current}/{total}
       </span>
+    </>
+  );
+
+  if (onClick) {
+    return (
+      <button
+        onClick={onClick}
+        aria-label="Reset progress"
+        className="relative inline-flex items-center justify-center rounded-full transition-opacity active:opacity-70"
+        style={{ WebkitTapHighlightColor: "transparent" }}
+      >
+        {inner}
+      </button>
+    );
+  }
+
+  return (
+    <div className="relative inline-flex items-center justify-center">
+      {inner}
     </div>
   );
 }

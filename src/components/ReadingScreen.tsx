@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { DzikrItem } from "@/lib/dzikr";
-import { saveProgress, getProgress } from "@/lib/progress";
+import { saveProgress, getProgress, resetProgress } from "@/lib/progress";
 import { celebrateComplete } from "@/lib/celebrate";
 import { playCompleteDone } from "@/lib/sound";
 import DzikrCard from "@/components/DzikrCard";
@@ -32,6 +32,10 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
   const [autoScroll, setAutoScroll] = useState(false);
   const [scrollSpeed, setScrollSpeed] = useState(1);
   const [showSpeedMenu, setShowSpeedMenu] = useState(false);
+  // Incrementing this key force-remounts all DzikrCards, resetting their
+  // internal done / tasbihCount state on progress reset.
+  const [resetKey, setResetKey] = useState(0);
+  const [showResetModal, setShowResetModal] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const autoScrollRef = useRef<number | null>(null);
 
@@ -199,7 +203,25 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
     [items.length]
   );
 
+  function handleReset() {
+    // Clear persisted data
+    resetProgress(type);
+    sessionStorage.removeItem(`zikra_scroll_${type}`);
+    // Reset all in-memory state
+    setCompletedIndices([]);
+    setCurrentIndex(0);
+    completedInSessionRef.current = false;
+    // Scroll back to top
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollTop = 0;
+    }
+    // Force-remount all DzikrCards so their internal done/tasbihCount reset
+    setResetKey((k) => k + 1);
+    setShowResetModal(false);
+  }
+
   return (
+    <>
     <div className="h-dvh flex flex-col" style={{ backgroundColor: "var(--bg)" }}>
       {/* Sticky top wrapper: header + controls move as one unit */}
       <div
@@ -245,7 +267,11 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
 
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            <ProgressRing current={completedIndices.length} total={items.length} />
+            <ProgressRing
+              current={completedIndices.length}
+              total={items.length}
+              onClick={() => setShowResetModal(true)}
+            />
           </div>
         </header>
 
@@ -355,7 +381,7 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
         <div className="container-app flex flex-col gap-8">
           {items.map((item, index) => (
             <DzikrCard
-              key={index}
+              key={`${resetKey}-${index}`}
               item={item}
               index={index}
               total={items.length}
@@ -396,5 +422,104 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
         </div>
       </div>
     </div>
+
+    {/* ── Reset Progress Modal ── */}
+    {showResetModal && (
+      <>
+        {/* Overlay */}
+        <div
+          className="fixed inset-0 z-40"
+          style={{ backgroundColor: "rgba(0,0,0,0.45)" }}
+          onClick={() => setShowResetModal(false)}
+        />
+        {/* Bottom sheet */}
+        <div
+          className="fixed bottom-0 left-0 right-0 z-50"
+          style={{
+            maxWidth: "600px",
+            margin: "0 auto",
+            animation: "sheetUp 0.25s cubic-bezier(0.32,0.72,0,1) both",
+          }}
+        >
+          <div
+            className="rounded-t-2xl p-6 pb-10"
+            style={{ backgroundColor: "var(--bg-card)" }}
+          >
+            {/* Handle */}
+            <div
+              className="w-10 h-1 rounded-full mx-auto mb-6"
+              style={{ backgroundColor: "var(--border-color)" }}
+            />
+            {/* Icon */}
+            <div
+              className="w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-4"
+              style={{ backgroundColor: "var(--bg-card-alt)" }}
+            >
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none"
+                stroke="var(--primary-green)" strokeWidth="1.75" strokeLinecap="round"
+              >
+                <polyline points="1 4 1 10 7 10" />
+                <path d="M3.51 15a9 9 0 1 0 .49-3.45" />
+              </svg>
+            </div>
+            {/* Text */}
+            <h2
+              className="text-lg text-center mb-1"
+              style={{
+                fontFamily: "Newsreader, Georgia, serif",
+                color: "var(--text-primary)",
+                fontWeight: 600,
+              }}
+            >
+              Reset Progress?
+            </h2>
+            <p
+              className="text-sm text-center mb-8"
+              style={{
+                fontFamily: "Manrope, sans-serif",
+                color: "var(--text-muted)",
+                lineHeight: 1.6,
+              }}
+            >
+              Semua tanda selesai akan dihapus dan{"\n"}
+              kamu bisa mulai dari awal lagi.
+            </p>
+            {/* Buttons */}
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowResetModal(false)}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold"
+                style={{
+                  backgroundColor: "var(--bg-card-alt)",
+                  color: "var(--text-secondary)",
+                  border: "1px solid var(--border-color)",
+                  fontFamily: "Manrope, sans-serif",
+                }}
+              >
+                Batal
+              </button>
+              <button
+                onClick={handleReset}
+                className="flex-1 py-3 rounded-xl text-sm font-semibold transition-opacity active:opacity-80"
+                style={{
+                  backgroundColor: "var(--primary-green)",
+                  color: "#ffffff",
+                  fontFamily: "Manrope, sans-serif",
+                }}
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+        <style>{`
+          @keyframes sheetUp {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
+          }
+        `}</style>
+      </>
+    )}
+  </>
   );
 }
