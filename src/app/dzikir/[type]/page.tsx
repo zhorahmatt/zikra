@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { getDzikrByType } from "@/lib/dzikr";
+import { getItemsBySlug, CATEGORIES } from "@/lib/dzikr";
 import ReadingScreen from "@/components/ReadingScreen";
 import type { Metadata } from "next";
 
@@ -8,27 +8,22 @@ type PageProps = {
 };
 
 export async function generateStaticParams() {
-  return [{ type: "morning" }, { type: "evening" }];
+  return CATEGORIES.map((c) => ({ type: c.slug }));
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { type } = await params;
-  const title =
-    type === "morning" ? "Dzikir Pagi" : type === "evening" ? "Dzikir Petang" : "";
+  const cat = CATEGORIES.find((c) => c.slug === type);
+  if (!cat) return {};
   return {
-    title: `${title} — Zikra`,
-    description: `Baca ${title} dengan fokus dan tenang.`,
+    title: `${cat.name} — Dzkrr`,
+    description: `Baca ${cat.name} dengan fokus dan tenang.`,
   };
 }
 
 export default async function DzikrPage({ params }: PageProps) {
   const { type } = await params;
-
-  if (type !== "morning" && type !== "evening") {
-    notFound();
-  }
-
-  const items = getDzikrByType(type);
-
+  const items = getItemsBySlug(type);
+  if (!items) notFound();
   return <ReadingScreen type={type} items={items} />;
 }

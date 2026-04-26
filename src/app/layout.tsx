@@ -17,17 +17,17 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Zikra — Dzikir Pagi & Petang",
+  title: "Dzkrr — Dzikir Pagi & Petang",
   description:
     "Aplikasi sederhana untuk membaca dzikir pagi dan petang. Mudah, fokus, tanpa distraksi.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Zikra",
+    title: "Dzkrr",
   },
   openGraph: {
-    title: "Zikra — Dzikir Pagi & Petang",
+    title: "Dzkrr — Dzikir Pagi & Petang",
     description: "Mudah baca dzikir dimana saja",
     type: "website",
   },

@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import type { DzikrItem } from "@/lib/dzikr";
+import { CATEGORIES } from "@/lib/dzikr";
 import { saveProgress, getProgress, resetProgress } from "@/lib/progress";
 import { celebrateComplete } from "@/lib/celebrate";
 import { playCompleteDone } from "@/lib/sound";
@@ -11,7 +12,7 @@ import ProgressRing from "@/components/ui/ProgressRing";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 interface ReadingScreenProps {
-  type: "morning" | "evening";
+  type: string;   // category slug e.g. "morning-dhikr", "daily-dua" …
   items: DzikrItem[];
 }
 
@@ -39,8 +40,9 @@ export default function ReadingScreen({ type, items }: ReadingScreenProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const autoScrollRef = useRef<number | null>(null);
 
-  const title = type === "morning" ? "Dzikir Pagi" : "Dzikir Petang";
-  const arabicTitle = type === "morning" ? "أذكار الصباح" : "أذكار المساء";
+  const cat = CATEGORIES.find((c) => c.slug === type);
+  const title = cat?.name ?? "Dzikir";
+  const arabicTitle = cat?.arabic ?? "";
 
   // Restore progress (completed items) on mount
   useEffect(() => {

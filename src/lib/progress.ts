@@ -1,3 +1,9 @@
+/**
+ * Progress persistence for all dua/dhikr categories.
+ * Keyed by category slug (any string) so all 5 categories
+ * get independent progress tracking.
+ */
+
 const STORAGE_KEY_PREFIX = "zikra_progress_";
 
 export interface ProgressData {
@@ -6,10 +12,10 @@ export interface ProgressData {
   lastReadAt: string;
 }
 
-export function getProgress(type: "morning" | "evening"): ProgressData | null {
+export function getProgress(slug: string): ProgressData | null {
   if (typeof window === "undefined") return null;
   try {
-    const raw = localStorage.getItem(STORAGE_KEY_PREFIX + type);
+    const raw = localStorage.getItem(STORAGE_KEY_PREFIX + slug);
     return raw ? JSON.parse(raw) : null;
   } catch {
     return null;
@@ -17,7 +23,7 @@ export function getProgress(type: "morning" | "evening"): ProgressData | null {
 }
 
 export function saveProgress(
-  type: "morning" | "evening",
+  slug: string,
   currentIndex: number,
   completedIndices: number[]
 ): void {
@@ -27,12 +33,12 @@ export function saveProgress(
     completedIndices,
     lastReadAt: new Date().toISOString(),
   };
-  localStorage.setItem(STORAGE_KEY_PREFIX + type, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY_PREFIX + slug, JSON.stringify(data));
 }
 
-export function resetProgress(type: "morning" | "evening"): void {
+export function resetProgress(slug: string): void {
   if (typeof window === "undefined") return;
-  localStorage.removeItem(STORAGE_KEY_PREFIX + type);
+  localStorage.removeItem(STORAGE_KEY_PREFIX + slug);
 }
 
 export function getTodayKey(): string {

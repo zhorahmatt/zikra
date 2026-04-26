@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Tentang & Kredit — Zikra",
-  description: "Sumber data dan inspirasi di balik Zikra.",
+  title: "Tentang Dzkrr",
+  description: "Sumber data dan inspirasi di balik Dzkrr.",
 };
 
 export default function CreditsPage() {
@@ -35,13 +35,13 @@ export default function CreditsPage() {
             className="text-base font-semibold"
             style={{ fontFamily: "Newsreader", color: "var(--text-primary)", fontWeight: 600 }}
           >
-            Tentang & Kredit
+            Tentang
           </h1>
           <p
             className="text-xs"
             style={{ color: "var(--text-muted)", fontFamily: "Manrope" }}
           >
-            Zikra berdiri di atas karya orang-orang baik
+            Dzkrr berdiri di atas karya orang-orang baik
           </p>
         </div>
       </header>
@@ -59,7 +59,7 @@ export default function CreditsPage() {
             className="text-2xl font-normal mb-3 leading-snug"
             style={{ fontFamily: "Newsreader", color: "var(--primary-green)" }}
           >
-            Zikra
+            Dzkrr
           </p>
           <p
             className="text-sm leading-relaxed"
@@ -127,7 +127,7 @@ export default function CreditsPage() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 transition-opacity hover:opacity-75"
             style={{
-              backgroundColor: "var(--primary-green-surface)",
+              backgroundColor: "var(--bg-card-alt)",
               color: "var(--primary-green)",
               fontFamily: "Manrope",
             }}
@@ -200,24 +200,6 @@ export default function CreditsPage() {
           </p>
 
           <div className="flex flex-wrap gap-2">
-            <a
-              href="https://dzikrr.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 transition-opacity hover:opacity-75"
-              style={{
-                backgroundColor: "var(--primary-green-surface)",
-                color: "var(--primary-green)",
-                fontFamily: "Manrope",
-              }}
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
-                <polyline points="15 3 21 3 21 9" />
-                <line x1="10" y1="14" x2="21" y2="3" />
-              </svg>
-              dzikrr.vercel.app
-            </a>
             <a
               href="https://gifa.dev/"
               target="_blank"
