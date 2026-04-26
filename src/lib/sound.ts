@@ -1,107 +1,49 @@
 /**
- * Lightweight sound synthesis using Web Audio API.
- * No audio files needed — fully offline-friendly.
+ * Sound playback using real audio clips served from /public.
+ * Falls back silently if autoplay is blocked or audio is unsupported.
  */
 
-function getAudioContext(): AudioContext | null {
-  if (typeof window === "undefined") return null;
+function playAudio(src: string): void {
+  if (typeof window === "undefined") return;
   try {
-    return new (window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+    const audio = new Audio(src);
+    audio.volume = 0.85;
+    audio.play().catch(() => {
+      // Autoplay blocked — silent fail
+    });
   } catch {
-    return null;
+    // Audio not supported — silent fail
   }
 }
 
+/** Pool of clips to pick from randomly for each card completion. */
+const CARD_DONE_SOUNDS = [
+  "/masyaallah.mp3",
+  "/alhamdulillah.mp3",
+];
+
+function playCardDone() {
+  const src = CARD_DONE_SOUNDS[Math.floor(Math.random() * CARD_DONE_SOUNDS.length)];
+  playAudio(src);
+}
+
 /**
- * Soft single chime — for Tandai / single-read completion.
- * A decaying sine wave at ~880 Hz (A5), like a small bell tap.
+ * Random sound from the pool — plays when a single-read card is marked done.
  */
 export function playSingleDone() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-
-  osc.type = "sine";
-  osc.frequency.setValueAtTime(880, ctx.currentTime);
-  // Slight pitch drop adds warmth
-  osc.frequency.exponentialRampToValueAtTime(660, ctx.currentTime + 0.3);
-
-  gain.gain.setValueAtTime(0.18, ctx.currentTime);
-  gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-
-  osc.start(ctx.currentTime);
-  osc.stop(ctx.currentTime + 0.6);
-  osc.onended = () => ctx.close();
+  playCardDone();
 }
 
 /**
- * Two-note chime — for tasbih completion (more notes = more satisfying).
- * Plays a minor third interval: A5 + C6 staggered.
+ * Random sound from the pool — plays when a tasbih card reaches its repeat target.
  */
 export function playTasbihDone() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const playNote = (freq: number, delay: number, duration: number, vol: number) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.75, ctx.currentTime + delay + duration);
-
-    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
-
-    osc.start(ctx.currentTime + delay);
-    osc.stop(ctx.currentTime + delay + duration);
-  };
-
-  // A5 → C6 → E6: ascending arpeggio
-  playNote(880, 0, 0.7, 0.18);
-  playNote(1047, 0.12, 0.7, 0.15);
-  playNote(1319, 0.24, 0.9, 0.12);
-
-  // Close context after all notes finish
-  setTimeout(() => ctx.close(), 1500);
+  playCardDone();
 }
 
 /**
- * Grand three-note ascending chord — for full session completion.
+ * Always "Alhamdulillah" — plays when all cards in the session are complete.
  */
 export function playCompleteDone() {
-  const ctx = getAudioContext();
-  if (!ctx) return;
-
-  const playNote = (freq: number, delay: number, duration: number, vol: number) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.connect(gain);
-    gain.connect(ctx.destination);
-
-    osc.type = "sine";
-    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
-    osc.frequency.exponentialRampToValueAtTime(freq * 0.8, ctx.currentTime + delay + duration);
-
-    gain.gain.setValueAtTime(vol, ctx.currentTime + delay);
-    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + duration);
-
-    osc.start(ctx.currentTime + delay);
-    osc.stop(ctx.currentTime + delay + duration);
-  };
-
-  // C5 → E5 → G5 → C6: major chord arpeggio
-  playNote(523, 0, 1.2, 0.2);
-  playNote(659, 0.15, 1.1, 0.16);
-  playNote(784, 0.3, 1.0, 0.14);
-  playNote(1047, 0.45, 1.2, 0.12);
-
-  setTimeout(() => ctx.close(), 2000);
+  playAudio("/alhamdulillah.mp3");
 }
