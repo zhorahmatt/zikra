@@ -17,9 +17,9 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Dzkrr — Dzikir Pagi & Petang",
+  title: "Dzkrr — Dzikir & Doa Harian",
   description:
-    "Aplikasi sederhana untuk membaca dzikir pagi dan petang. Mudah, fokus, tanpa distraksi.",
+    "Mudah baca dzikir dan doa dimana saja. Jadikan mengingat Allah bagian dari keseharianmu.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
@@ -27,8 +27,8 @@ export const metadata: Metadata = {
     title: "Dzkrr",
   },
   openGraph: {
-    title: "Dzkrr — Dzikir Pagi & Petang",
-    description: "Mudah baca dzikir dimana saja",
+    title: "Dzkrr — Dzikir & Doa Harian",
+    description: "Mudah baca dzikir dan doa dimana saja.",
     type: "website",
   },
 };

@@ -65,12 +65,104 @@ export default function CreditsPage() {
             className="text-sm leading-relaxed"
             style={{ color: "var(--primary-green)", fontFamily: "Manrope", opacity: 0.8 }}
           >
-            Aplikasi sederhana untuk membaca dzikir pagi dan petang.
+            Aplikasi dzikir dan doa harian yang sederhana.
             Dibuat dengan niat baik, dari sumber-sumber yang terpercaya.
-            Semoga bermanfaat.
+            Insyaallah Semoga bermanfaat.
           </p>
         </div>
 
+        {/* Section: Pembuat */}
+        <p
+          className="text-xs font-semibold uppercase mb-4"
+          style={{
+            color: "var(--text-muted)",
+            fontFamily: "Manrope",
+            letterSpacing: "0.1em",
+          }}
+        >
+          Kreator
+        </p>
+
+        <div
+          className="rounded-lg p-5 mb-10"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: "1px solid var(--border-color)",
+            boxShadow: "0px 4px 20px rgba(0,0,0,0.04)",
+          }}
+        >
+          {/* Avatar + name */}
+          <div className="flex items-center gap-3 mb-4">
+            <span
+              className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 text-sm font-bold"
+              style={{
+                backgroundColor: "var(--primary-green-surface)",
+                color: "var(--primary-green)",
+                fontFamily: "Manrope",
+              }}
+            >
+              R
+            </span>
+            <div>
+              <p
+                className="text-sm font-semibold"
+                style={{ fontFamily: "Manrope", color: "var(--text-primary)" }}
+              >
+                Rahmat Hidayat
+              </p>
+              <p
+                className="text-xs"
+                style={{ fontFamily: "Manrope", color: "var(--text-muted)" }}
+              >
+                Pembuat Dzkrr
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
+            {/* Instagram */}
+            <a
+              href="https://www.instagram.com/aaaso__/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 transition-opacity hover:opacity-75"
+              style={{
+                backgroundColor: "var(--bg-card-alt)",
+                color: "var(--text-muted)",
+                border: "1px solid var(--border-color)",
+                fontFamily: "Manrope",
+              }}
+            >
+              {/* Instagram icon */}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+              </svg>
+              @aaaso__
+            </a>
+
+            {/* GitHub */}
+            <a
+              href="https://github.com/zhorahmatt"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold rounded-full px-3 py-1.5 transition-opacity hover:opacity-75"
+              style={{
+                backgroundColor: "var(--bg-card-alt)",
+                color: "var(--text-muted)",
+                border: "1px solid var(--border-color)",
+                fontFamily: "Manrope",
+              }}
+            >
+              {/* GitHub icon */}
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z" />
+              </svg>
+              zhorahmatt
+            </a>
+          </div>
+        </div>
         {/* Section: Data */}
         <p
           className="text-xs font-semibold uppercase mb-4"
@@ -80,9 +172,8 @@ export default function CreditsPage() {
             letterSpacing: "0.1em",
           }}
         >
-          Data Dzikir
+          Kredit
         </p>
-
         <div
           className="rounded-lg p-5 mb-10"
           style={{
@@ -140,19 +231,6 @@ export default function CreditsPage() {
             github.com/fitrahive/dua-dhikr
           </a>
         </div>
-
-        {/* Section: Inspiration */}
-        <p
-          className="text-xs font-semibold uppercase mb-4"
-          style={{
-            color: "var(--text-muted)",
-            fontFamily: "Manrope",
-            letterSpacing: "0.1em",
-          }}
-        >
-          Inspirasi Desain
-        </p>
-
         <div
           className="rounded-lg p-5 mb-10"
           style={{
