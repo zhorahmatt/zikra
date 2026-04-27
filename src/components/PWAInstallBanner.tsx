@@ -173,7 +173,7 @@ export default function PWAInstallBanner() {
           }}
         >
           {platform === "ios"
-            ? "Buka dengan Safari, ketuk ikon Bagikan di bawah, lalu pilih "Tambahkan ke Layar Utama"."
+            ? <>Buka dengan Safari, ketuk ikon Bagikan di bawah, lalu pilih &ldquo;Tambahkan ke Layar Utama&rdquo;.</>
             : "Simpan Dzkrr di layar utama untuk akses cepat kapan saja — tanpa buka browser."}
         </p>
 
