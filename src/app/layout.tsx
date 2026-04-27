@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Newsreader, Manrope } from "next/font/google";
 import Script from "next/script";
 import { ThemeProvider } from "@/lib/theme";
+import PWAInstallBanner from "@/components/PWAInstallBanner";
 import "./globals.css";
 
 const newsreader = Newsreader({
@@ -60,7 +61,10 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          {children}
+          <PWAInstallBanner />
+        </ThemeProvider>
       </body>
       {/* Google Analytics */}
       <Script
