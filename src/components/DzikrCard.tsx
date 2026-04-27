@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import type { DzikrItem } from "@/lib/dzikr";
 import { getRepeatCount } from "@/lib/dzikr";
 import { celebrateSingle, celebrateTasbih } from "@/lib/celebrate";
@@ -25,6 +26,7 @@ export default function DzikrCard({
   const [showFawaid, setShowFawaid] = useState(false);
   const [done, setDone] = useState(false);
   const [tasbihCount, setTasbihCount] = useState(0);
+  const [isBouncing, setIsBouncing] = useState(false);
   const btnRef = useRef<HTMLButtonElement>(null);
   const repeatCount = getRepeatCount(item.notes);
   const isTasbih = repeatCount > 1;
@@ -33,6 +35,8 @@ export default function DzikrCard({
   const handleSelesai = () => {
     if (done) return;
     setDone(true);
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 500);
     playSingleDone();
     celebrateSingle(btnRef.current);
     navigator.vibrate?.(10);
@@ -45,6 +49,8 @@ export default function DzikrCard({
     if (done) return;
     const next = tasbihCount + 1;
     setTasbihCount(next);
+    setIsBouncing(true);
+    setTimeout(() => setIsBouncing(false), 500);
     navigator.vibrate?.(10);
     if (next >= repeatCount) {
       setDone(true);
@@ -66,6 +72,7 @@ export default function DzikrCard({
   const handleCardTap = isTasbih ? handleTasbihTap : handleSelesai;
 
   return (
+    <>
     <article
       onClick={onComplete && !done ? handleCardTap : undefined}
       className={`
@@ -73,34 +80,51 @@ export default function DzikrCard({
         ${isActive ? "ring-2 ring-primary-container" : ""}
         ${done ? "opacity-75" : ""}
         ${onComplete && !done ? "cursor-pointer active:scale-[0.99]" : ""}
+        ${isBouncing ? "animate-card-bounce" : ""}
       `}
       id={`dzikr-${index}`}
     >
-      {/* Header row: number badge + title + action pill */}
-      <div className="flex items-start justify-between gap-3 mb-4">
-        <div className="flex items-start gap-3 flex-1 min-w-0">
-          {/* Number / done badge */}
-          <span
-            className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5"
-            style={{
-              backgroundColor: done
-                ? "var(--primary-green)"
-                : "var(--primary-green-surface)",
-              color: done ? "white" : "var(--primary-green)",
-              transition: "all 0.3s ease",
-            }}
-          >
-            {done ? "✓" : index + 1}
-          </span>
+      {/* Header: number badge | title + chips | action pill */}
+      <div className="flex items-start justify-between gap-2 mb-4">
+
+        {/* Left: number badge */}
+        <span
+          className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0"
+          style={{
+            backgroundColor: done
+              ? "var(--primary-green)"
+              : "var(--primary-green-surface)",
+            color: done ? "white" : "var(--primary-green)",
+            transition: "all 0.3s ease",
+          }}
+        >
+          {done ? "✓" : index + 1}
+        </span>
+
+        {/* Middle: title + inline metadata */}
+        <div className="flex-1 min-w-0">
           <h3
-            className="text-sm font-semibold leading-snug"
-            style={{ color: "var(--text-primary)", fontFamily: "Manrope" }}
+            className="font-semibold leading-snug mb-1"
+            style={{
+              color: "var(--text-primary)",
+              fontFamily: "Manrope",
+              fontSize: "1rem",
+            }}
           >
             {item.title}
           </h3>
+          <p
+            className="text-xs truncate"
+            style={{
+              color: "var(--text-muted)",
+              fontFamily: "Manrope",
+            }}
+          >
+            {item.source}
+          </p>
         </div>
 
-        {/* Action pill — top right for ALL card types */}
+        {/* Right: action pill */}
         {onComplete && (
           <button
             ref={btnRef}
@@ -151,7 +175,6 @@ export default function DzikrCard({
             ) : (
               <>
                 {isTasbih ? (
-                  /* Tasbih: show count/target with a small tap icon */
                   <>
                     <svg
                       width="11" height="11" viewBox="0 0 24 24"
@@ -162,7 +185,6 @@ export default function DzikrCard({
                     {pillLabel}
                   </>
                 ) : (
-                  /* Single read: Tandai */
                   <>
                     <svg
                       width="12" height="12" viewBox="0 0 24 24"
@@ -198,13 +220,13 @@ export default function DzikrCard({
       {/* Latin toggle */}
       <button
         onClick={(e) => { e.stopPropagation(); setShowLatin(!showLatin); }}
-        className="text-xs font-medium mb-3 flex items-center gap-1 transition-colors hover:opacity-80"
-        style={{ color: "var(--primary-green)" }}
+        className="text-lg mb-3 flex items-center gap-1.5 transition-colors hover:opacity-80"
+        style={{ color: "var(--primary-green)", fontFamily: "Newsreader" }}
       >
         <svg
-          width="14" height="14" viewBox="0 0 24 24"
+          width="16" height="16" viewBox="0 0 24 24"
           fill="none" stroke="currentColor" strokeWidth="2"
-          className={`transition-transform duration-200 ${showLatin ? "rotate-90" : ""}`}
+          className={`transition-transform duration-200 mt-1 ${showLatin ? "rotate-90" : ""}`}
         >
           <polyline points="9 18 15 12 9 6" />
         </svg>
@@ -217,41 +239,26 @@ export default function DzikrCard({
         </div>
       )}
 
-      {/* Chips: Notes + Source */}
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        <span className="chip chip-primary">{item.notes}</span>
-        <span className="chip chip-tertiary">{item.source}</span>
-      </div>
 
-      {/* Fawaid expandable */}
+
+      {/* Fawaid — popup trigger */}
       {item.fawaid && (
         <div className="mb-3">
           <button
-            onClick={(e) => { e.stopPropagation(); setShowFawaid(!showFawaid); }}
-            className="text-xs font-medium flex items-center gap-1 transition-colors hover:opacity-80"
-            style={{ color: "var(--text-muted)" }}
+            onClick={(e) => { e.stopPropagation(); setShowFawaid(true); }}
+            className="text-lg flex items-center gap-1.5 transition-colors hover:opacity-80"
+            style={{ color: "var(--primary-green)", fontFamily: "Newsreader" }}
           >
+            {/* Sparkle / star icon */}
             <svg
-              width="12" height="12" viewBox="0 0 24 24"
+              width="16" height="16" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" strokeWidth="2"
-              className={`transition-transform duration-200 ${showFawaid ? "rotate-180" : ""}`}
+              className="mt-0.5"
             >
-              <polyline points="6 9 12 15 18 9" />
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
             </svg>
-            Faedah
+            Lihat Keutamaan
           </button>
-          {showFawaid && (
-            <div
-              className="mt-2 p-3 rounded-lg text-xs leading-relaxed"
-              style={{
-                backgroundColor: "var(--bg-card-alt)",
-                color: "var(--text-secondary)",
-                fontFamily: "Manrope",
-              }}
-            >
-              {item.fawaid}
-            </div>
-          )}
         </div>
       )}
 
@@ -264,6 +271,115 @@ export default function DzikrCard({
           {index + 1}/{total}
         </span>
       </div>
+      <style>{`
+        @keyframes cardBounce {
+          0% { transform: scale(1); }
+          40% { transform: scale(0.96); }
+          75% { transform: scale(1.02); }
+          100% { transform: scale(1); }
+        }
+        .animate-card-bounce {
+          animation: cardBounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+      `}</style>
     </article>
+
+    {/* Fawaid Modal */}
+    {showFawaid && typeof document !== "undefined" && createPortal(
+      <>
+        {/* Backdrop */}
+        <div
+          onClick={() => setShowFawaid(false)}
+          style={{
+            position: "fixed", inset: 0, zIndex: 998,
+            backgroundColor: "rgba(0,0,0,0.4)",
+          }}
+        />
+        {/* Bottom sheet */}
+        <div
+          style={{
+            position: "fixed", bottom: 0, left: 0, right: 0, zIndex: 999,
+            maxWidth: "600px", margin: "0 auto",
+            animation: "sheetUp 0.25s cubic-bezier(0.32,0.72,0,1) both",
+          }}
+        >
+          <div
+            className="rounded-t-2xl p-6 pb-8"
+            style={{ backgroundColor: "var(--bg-card)", position: "relative" }}
+          >
+            {/* X close button — top right */}
+            <button
+              onClick={() => setShowFawaid(false)}
+              aria-label="Tutup"
+              style={{
+                position: "absolute", top: "1rem", right: "1rem",
+                width: 32, height: 32,
+                borderRadius: "50%",
+                border: "1px solid var(--border-color)",
+                backgroundColor: "var(--bg-card-alt)",
+                color: "var(--text-muted)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer",
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
+            </button>
+
+            {/* Handle */}
+            <div
+              className="w-10 h-1 rounded-full mx-auto mb-5"
+              style={{ backgroundColor: "var(--border-color)" }}
+            />
+            {/* Icon + Title (one line) */}
+            <div className="flex items-center gap-2 mb-5">
+              <span
+                className="w-8 h-8 rounded-full flex items-center justify-center shrink-0"
+                style={{ backgroundColor: "var(--primary-green-surface)", color: "var(--primary-green)" }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                </svg>
+              </span>
+              <h2
+                style={{
+                  fontFamily: "Newsreader",
+                  fontSize: "1.2rem",
+                  fontWeight: 600,
+                  color: "var(--text-primary)",
+                  lineHeight: 1.3,
+                }}
+              >
+                Keutamaan Membaca {item.title}
+              </h2>
+            </div>
+            {/* Content */}
+            <p
+              style={{
+                fontFamily: "Newsreader",
+                fontSize: "1.1rem",
+                lineHeight: 1.7,
+                color: "var(--primary-green)",
+                backgroundColor: "var(--primary-green-surface)",
+                borderRadius: "0.75rem",
+                padding: "1rem",
+              }}
+            >
+              {item.fawaid}
+            </p>
+          </div>
+        </div>
+        <style>{`
+          @keyframes sheetUp {
+            from { transform: translateY(100%); }
+            to   { transform: translateY(0); }
+          }
+        `}</style>
+      </>,
+      document.body
+    )}
+  </>
   );
 }
