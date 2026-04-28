@@ -61,7 +61,7 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <head>
-        <link rel="apple-touch-icon" href="/icons/icon-192.png" />
+        <link rel="apple-touch-icon" href="/flower.svg" />
       </head>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
