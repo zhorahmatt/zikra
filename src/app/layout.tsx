@@ -22,6 +22,9 @@ export const metadata: Metadata = {
   description:
     "Mudah baca dzikir dan doa dimana saja. Jadikan mengingat Allah bagian dari keseharianmu.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/flower.svg",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
