@@ -133,7 +133,7 @@ export default function PWAInstallBanner() {
           {/* App icon */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/icons/icon-192.png"
+            src="/flower.svg"
             alt="Dzkrr"
             width={44}
             height={44}
