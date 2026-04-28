@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <!-- Solid green background for PWA icon -->
+  <rect width="512" height="512" fill="#334f2b"/>
+  <!-- Flower from original flower.svg, recentered and scaled with white color -->
+  <g transform="translate(256,256) scale(0.55) translate(-256,-256)">
+    <g transform="matrix(1,0,0,-1,0,512)">
+      <g transform="translate(425.7061,425.7056)">
+        <path d="M 0,0 C 0,0 -134.559,-7.28 -169.706,-42.427 -204.853,-7.28 -339.412,0 -339.412,0 c 0,0 7.281,-134.559 42.428,-169.706 -35.147,-35.147 -42.428,-169.706 -42.428,-169.706 0,0 134.559,7.281 169.706,42.428 C -134.559,-332.131 0,-339.412 0,-339.412 c 0,0 -7.28,134.559 -42.428,169.706 C -7.28,-134.559 0,0 0,0 Z"
+          style="fill:none;stroke:#ffffff;stroke-width:28;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+      <g transform="translate(346,166)">
+        <path d="m 0,0 c -49.706,0 -90,40.294 -90,90 0,49.706 40.294,90 90,90 C 49.706,180 151,90 151,90 151,90 49.706,0 0,0 Z"
+          style="fill:none;stroke:#ffffff;stroke-width:28;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+      <g transform="translate(166,346)">
+        <path d="m 0,0 c 49.706,0 90,-40.294 90,-90 0,-49.706 -40.294,-90 -90,-90 -49.706,0 -151,90 -151,90 0,0 101.294,90 151,90 z"
+          style="fill:none;stroke:#ffffff;stroke-width:28;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+      <g transform="translate(166,166)">
+        <path d="M 0,0 C 0,49.706 40.294,90 90,90 139.706,90 180,49.706 180,0 180,-49.706 90,-151 90,-151 90,-151 0,-49.706 0,0 Z"
+          style="fill:none;stroke:#ffffff;stroke-width:28;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+      <g transform="translate(346,346)">
+        <path d="m 0,0 c 0,-49.706 -40.294,-90 -90,-90 -49.706,0 -90,40.294 -90,90 0,49.706 90,151 90,151 C -90,151 0,49.706 0,0 Z"
+          style="fill:none;stroke:#ffffff;stroke-width:28;stroke-linecap:round;stroke-linejoin:round"/>
+      </g>
+    </g>
+  </g>
+</svg>
